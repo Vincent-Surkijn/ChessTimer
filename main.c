@@ -12,8 +12,6 @@ int main(int argc, char *argv[]){
   pthread_t inputThread;
 
   int *totalTime = malloc(sizeof(int));
-  int *time1 = malloc(sizeof(int));
-  int *time2 = malloc(sizeof(int));
 
   if( argc == 2 ) {
      *totalTime = atoi(argv[1]);
@@ -32,6 +30,9 @@ int main(int argc, char *argv[]){
 
   printf("This is a chess timer.\n");
   printf("Press any button to start.\n");
+
+  int *time1 = malloc(sizeof(int));
+  int *time2 = malloc(sizeof(int));
 
   *time1 = *totalTime;
   *time2 = *totalTime;
@@ -53,8 +54,14 @@ int main(int argc, char *argv[]){
      sleep(1);
   }
 
+  if(pthread_cancel(inputThread) != 0) printf("can't kill input thread\n\n");;
 
-  if(pthread_join(inputThread, NULL) !=0) printf("can't join input thread\n\n");
+  if(turn1){
+     printf("Player 1 ran out of time!\n");
+  }
+  else{
+     printf("Player 2 ran out of time!\n");
+  }
 
   free(totalTime);
   free(time1);
@@ -72,7 +79,7 @@ void *readInput(){
   while(true){
      char *s = malloc(10);
      scanf("%s",s);
-     printf("input: %s\n",s);
+     //printf("input: %s\n",s);
      turn1 = turn1 == false ? true : false;
   }
 }
